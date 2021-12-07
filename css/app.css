@@ -1,8 +1,47 @@
-/*
+.todoapp {
+    --selected: #CE4646;
+}
 
-app-template.css overrides
+.todoapp[data-completed-count="0"] .clear-completed {
+    visibility: hidden;
+}
 
-remove this comment if used
-remove this file if not
+.todoapp[data-filter="active"] .task.completed {
+    display: none;
+}
 
-*/
+.todoapp[data-filter="completed"] .task:not(.completed) {
+    display: none;
+}
+
+.todoapp[data-filter="active"] .filters a[href$="active"] {
+	border-color: var(--selected);
+}
+
+.todoapp[data-filter=""] .filters a[href="#/"] {
+	border-color: var(--selected);
+}
+
+.todoapp[data-filter="completed"] .filters a[href$="completed"] {
+	border-color: var(--selected);
+}
+
+input[type="submit"] {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	font-size: 100%;
+	vertical-align: baseline;
+	font-family: inherit;
+	font-weight: inherit;
+	color: inherit;
+	-webkit-appearance: none;
+	appearance: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.editing .destroy {
+    display: none;
+}
