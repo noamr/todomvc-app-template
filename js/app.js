@@ -1,67 +1,41 @@
-import createTaskListModel from './model.js';
+import TaskListModel from './model.js';
 
-const app = document.querySelector('.todoapp');
-const list = app.querySelector('.todo-list');
-const formValues = form => Object.fromEntries(new FormData(form));
-const updateFilterFromHash = () => { app.dataset.filter = location.hash.substr(2); }
-window.addEventListener('hashchange', updateFilterFromHash);
-updateFilterFromHash();
-const item = key => list.querySelector(`li#task-${key}`);
-const mainForm = document.forms.main;
-const update = (key, value, element = item(key), form = element.querySelector('form')) => {
-	element.classList.toggle('completed', !!value.completed);
-	form.elements.completed.checked = !!value.completed;
-	element.querySelector('label').innerHTML = form.elements.title.value = value.title;
-	updateCount();
+const list = document.querySelector('.todo-list');
+const {completedCount, activeCount, clearCompleted, toggleAll, filter} = document.forms.main.elements;
+const applyFilter = () => { filter.value = location.hash.substr(2); };
+window.onhashchange = window.onload = applyFilter;
+window.addEventListener('submit', e => e.preventDefault(), {capture: true});
+
+new MutationObserver(() => {
+	completedCount.value = list.querySelectorAll('.task.completed').length;
+	const count = list.querySelectorAll('.task:not(.completed)').length;
+	activeCount.innerHTML = `<strong>${count}</strong> item${count === 1 ? '' : 's'} left`;
+}).observe(list, {childList: true, subtree: true, attributes: true});
+
+const update = (key, {title, completed}, form = document.forms[`task-${key}`]) => {
+	form.classList.toggle('completed', !!completed);
+	form.elements.completed.checked = !!completed;
+	form.elements.titleLabel.value = form.elements.title.value = title;
+	form.elements.title.blur();
 }
 
-const updateEditing = e =>
-	list.querySelectorAll('.task').forEach(t => t.classList.toggle('editing', t === e));
-
-function updateCount() {
-	const count = app.dataset.activeCount = app.querySelectorAll('.task:not(.completed)').length;
-	app.dataset.completedCount = app.querySelectorAll('.task.completed').length;
-	app.querySelector('.todo-count').innerHTML = `<strong>${count}</strong> item${count === 1 ? '' : 's'} left`;
-}
-
-const model = await createTaskListModel({
+const model = new TaskListModel({
 	update,
-	remove: key => {
-		item(key).remove();
-		updateCount();
-	},
-
 	add: (key, value) => {
-		const element = list.querySelector('template').content.cloneNode(true).firstElementChild
-		element.id = `task-${key}`;
-		const form = element.querySelector('form');
-		form.elements.completed.addEventListener('change', e =>
-			model.updateTask(key, formValues(e.target.form)));
-
-		form.querySelector('label').addEventListener('dblclick', () => {
-			updateEditing(element);
-			element.querySelector('.edit').focus();
-		});
-
-		form.addEventListener('submit', e => {
-			if (e.submitter.name === 'destroy')
-				model.deleteTask(key);
-			else
-				model.updateTask(key, formValues(e.target));
-			updateEditing(null);
-			e.preventDefault();
-		});
-
-		element.querySelector('.edit').addEventListener('blur', () => updateEditing(null));
-		update(key, value, element);
-		list.appendChild(element);
-		updateCount();
+		const form = list.querySelector('template').content.cloneNode(true).firstElementChild
+		const save = () => model.updateTask(key, Object.fromEntries(new FormData(form)));
+		form.name = `task-${key}`;
+		form.elements.completed.addEventListener('change', save);
+		form.elements.titleLabel.addEventListener('dblclick', () => form.elements.title.focus());
+		form.elements.destroy.addEventListener('click', () => model.deleteTask(key));
+		form.addEventListener('submit', save);
+		update(key, value, form);
+		list.appendChild(form);
 	},
+	remove: key => document.forms[`task-${key}`].remove()
 });
 
-mainForm.elements.clearCompleted.addEventListener('click', () => model.deleteCompleted());
-mainForm.elements.toggleAll.addEventListener('change', e => model.toggleAll(e.target.checked));
-mainForm.addEventListener('submit', e => {
-	model.createTask(formValues(e.target));
-	e.preventDefault();
-});
+clearCompleted.addEventListener('click', () => model.deleteCompleted());
+toggleAll.addEventListener('change', ({target: {checked}}) => model.toggleAll(checked));
+document.forms.main.addEventListener('submit', () =>
+	model.createTask({completed: false, title: document.forms.main.elements.title.value}));

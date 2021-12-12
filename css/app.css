@@ -2,27 +2,27 @@
     --selected: #CE4646;
 }
 
-.todoapp[data-completed-count="0"] .clear-completed {
+.todoapp input[name="completedCount"][value="0"] ~ * .clear-completed {
     visibility: hidden;
 }
 
-.todoapp[data-filter="active"] .task.completed {
+.todoapp input[name="filter"][value="active"] ~ * .task.completed {
     display: none;
 }
 
-.todoapp[data-filter="completed"] .task:not(.completed) {
+.todoapp input[name="filter"][value="completed"] ~ * .task:not(.completed) {
     display: none;
 }
 
-.todoapp[data-filter="active"] .filters a[href$="active"] {
+.todoapp input[name="filter"][value="active"] ~ * .filters a[href$="active"] {
 	border-color: var(--selected);
 }
 
-.todoapp[data-filter=""] .filters a[href="#/"] {
+.todoapp input[name="filter"][value="completed"] ~ * .filters a[href$="completed"] {
 	border-color: var(--selected);
 }
 
-.todoapp[data-filter="completed"] .filters a[href$="completed"] {
+.todoapp input[name="filter"][value=""] ~ * .filters a[href$="#/"] {
 	border-color: var(--selected);
 }
 
@@ -44,4 +44,63 @@ input[type="submit"] {
 
 .editing .destroy {
     display: none;
+}
+
+.todo-list li .toggle + output {
+	/*
+		Firefox requires `#` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
+		IE and Edge requires *everything* to be escaped to render, so we do that instead of just the `#` - https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7157459/
+	*/
+	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23949494%22%20stroke-width%3D%223%22/%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+
+.todo-list li .toggle:checked + output {
+	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%2359A193%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20fill%3D%22%233EA390%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.todo-list li output {
+	word-break: break-all;
+	padding: 15px 15px 15px 60px;
+	display: block;
+	line-height: 1.2;
+	transition: color 0.4s;
+	font-weight: 400;
+	color: #484848;
+}
+
+.todo-list li.completed output {
+	color: #949494;
+	text-decoration: line-through;
+}
+
+.todo-list li {
+	display: grid;
+}
+
+.todo-list li > * {
+	grid-area: 1 / 1 / 1 / 1;
+	background: white;
+}
+
+.todo-list li .edit {
+	display: block;
+	z-index: -1;
+}
+
+.todo-list .edit:focus {
+	z-index: 1;
+	width: calc(100% - 43px);
+	padding: 12px 16px;
+	margin-left: 43px;
+}
+
+.todo-list .task.completed output {
+	color: #949494;
+	text-decoration: line-through;
+}
+
+.new-todo {
+	z-index: 3;
 }
