@@ -18,11 +18,11 @@ export default class TaskListModel {
         this.#storageKey = options.storageKey || 'todos-vanilla';
         this.#client = client;
         const asJson = localStorage.getItem(this.#storageKey); 
-        if (!asJson)
-            return;
-        this.#tasks = new Map(JSON.parse(asJson));
-        for (const [key, value] of this.#tasks.entries())
-            this.#client.onAdd(key, value);
+        if (asJson) {
+            this.#tasks = new Map(JSON.parse(asJson));
+            for (const [key, value] of this.#tasks.entries())
+                this.#client.onAdd(key, value);
+        }
         this.#updateCount();
     }
 
