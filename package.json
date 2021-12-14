@@ -1,0 +1,13 @@
+{
+  "private": false,
+  "dependencies": {
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
+  },
+  "name": "todomvc-reactive-vanilla",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:noamr/todomvc-app-template.git",
+  "author": "Noam Rosenthal <noam.j.rosenthal@gmail.com>",
+  "license": "MIT"
+}
