@@ -6,6 +6,10 @@
     visibility: hidden;
 }
 
+.todoapp input[name="totalCount"][value="0"] ~ :is(.main, .footer) {
+	display: none;
+}
+
 .todoapp input[name="filter"][value="active"] ~ * .task.completed {
     display: none;
 }
@@ -26,7 +30,7 @@
 	border-color: var(--selected);
 }
 
-input[type="submit"] {
+input[type="submit"], input[type="button"] {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -70,7 +74,7 @@ input[type="submit"] {
 	color: #484848;
 }
 
-.todo-list li.completed output {
+.todo-list .toggle:checked + output {
 	color: #949494;
 	text-decoration: line-through;
 }
@@ -94,13 +98,4 @@ input[type="submit"] {
 	width: calc(100% - 43px);
 	padding: 12px 16px;
 	margin-left: 43px;
-}
-
-.todo-list .task.completed output {
-	color: #949494;
-	text-decoration: line-through;
-}
-
-.new-todo {
-	z-index: 3;
 }

@@ -1,84 +1,88 @@
+const uuidv4 = () => new Date().valueOf();
+
 export default class TaskListModel {
-    #db = null;
     #client = null;
+    #storageKey = null;
+    #tasks = new Map();
+
+    
+    #updateCount() {
+        const tasks = Array.from(this.#tasks.values());
+        this.#client.onCountChange(tasks.reduce((count, task) => {
+            ++(count[task.completed ? 'completed' : 'active']);
+            return count;
+        }, {active: 0, completed: 0}));
+    }
+
     constructor(client, options = {}) {
+        this.#storageKey = options.storageKey || 'todos-vanilla';
         this.#client = client;
-        const request = indexedDB.open(options.dbName || 'todomvc', 1);
-        request.addEventListener('error', event => { throw new Error(`Coult not open database: ${event}`) });
-
-        request.addEventListener('upgradeneeded', event =>
-            event.target.result.createObjectStore("tasks", {autoIncrement: true}));
-
-        this.#db = new Promise(resolve => 
-            request.addEventListener('success', ({target: {result}}) => resolve(result)));
-
-        this.#db.then(db => {
-            const store = db.transaction(["tasks"], "readonly").objectStore("tasks");
-            const changes = [];
-            store.openCursor().addEventListener('success', ({target}) => {
-                if (!target.result) {
-                    changes.forEach(([key, value]) => client.add(key, value));
-                    return;
-                }
-
-                const {key, value} = target.result;
-
-                changes.push([key, value]);
-                target.result.continue();
-            });
-        });
+        const asJson = localStorage.getItem(this.#storageKey); 
+        if (!asJson)
+            return;
+        this.#tasks = new Map(JSON.parse(asJson));
+        for (const [key, value] of this.#tasks.entries())
+            this.#client.onAdd(key, value);
+        this.#updateCount();
     }
 
-    async createTask(task) {
-        return (await this.#db).transaction(["tasks"], "readwrite").objectStore('tasks').add(task).addEventListener('success', 
-            ({target: {result}}) => this.#client.add(result, task));
+    #validateTask(task) {
+        task = {...task, title: task.title.trim()};
+        return task.title.length ? task : null;
     }
 
-    async updateTask(key, {completed, title}) {
-        const value = {completed: !!completed, title: title || ''}; 
-        (await this.#db).transaction(["tasks"], "readwrite").objectStore('tasks').put(value, key);
-        this.#client.update(key, value);
+    #save() {
+        this.#updateCount();
+        localStorage.setItem(this.#storageKey, JSON.stringify(Array.from(this.#tasks.entries())));
     }
 
-    async deleteTask(key) {
-        (await this.#db).transaction(["tasks"], "readwrite").objectStore('tasks').delete(key);
-        this.#client.remove(key);
+    createTask(task) {
+        task = this.#validateTask(task);
+        if (!task)
+            return;
+        const key = uuidv4();
+        this.#tasks.set(key, task);
+        this.#client.onAdd(key, task);
+        this.#save();
     }
 
-    async deleteCompleted() {
-        const store = (await this.#db).transaction(["tasks"], "readwrite").objectStore("tasks");
-        const changes = [];
-        store.openCursor().addEventListener('success', ({target: {result}}) => {
-            if (!result) {
-                changes.forEach(change => this.#client.remove(change));
-                return;
-            }
+    updateTask(key, task) {
+        task = this.#validateTask(task);
+        if (!task)
+            this.deleteTask(key);
 
-            if (result.value.completed) {
-                store.delete(result.key);
-                changes.push(result.key);
-            }
-
-            result.continue();
-        });
+        this.#tasks.set(key, task);
+        this.#client.onUpdate(key, task);
+        this.#save();
     }
 
-    async toggleAll(completed) {
-        const store = (await this.#db).transaction(["tasks"], "readwrite").objectStore("tasks");
-        const changes = [];
-        store.openCursor().addEventListener('success', ({target: {result}}) => {
-            if (!result) {
-                changes.forEach(([key, value]) => this.#client.update(key, value))
-                return;
-            }
+    deleteTask(key) {
+        this.#tasks.delete(key);
+        this.#client.onRemove(key);
+        this.#save();
+    }
 
-            if (result.value.completed !== completed) {
-                result.value.completed = completed;
-                store.put(result.value, result.key);
-                changes.push([result.key, result.value]);
-            }
+    clearCompleted() {
+        for (const [key, {completed}] of this.#tasks) {
+            if (!completed)
+                continue;
 
-            result.continue();
-        });
+            this.#tasks.delete(key);
+            this.#client.onRemove(key);
+        }
+
+        this.#save();
+    }
+
+    markAll(completed) {
+        for (const [key, task] of this.#tasks) {
+            if (completed === task.completed)
+                continue;
+
+            task.completed = !!completed;
+            this.#client.onUpdate(key, task);
+        }
+
+        this.#save();
     }
 }
