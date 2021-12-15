@@ -25,7 +25,6 @@ const model = new TaskListModel(new class {
 	}
 
 	onRemove(key) { document.forms[`task-${key}`].remove(); }
-
 	onCountChange({active, completed}) {
 		completedCount.value = completed;
 		toggleAll.checked = active === 0;
@@ -34,6 +33,6 @@ const model = new TaskListModel(new class {
 	}
 });
 
-clearCompleted.addEventListener('click', e => model.clearCompleted());
-toggleAll.addEventListener('change', e => model.markAll(e.target.checked));
 document.forms.new.addEventListener('submit', ({target}) => model.createTask(formData(target)));
+toggleAll.addEventListener('change', e => model.markAll(e.target.checked));
+clearCompleted.addEventListener('click', e => model.clearCompleted());

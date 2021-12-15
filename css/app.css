@@ -6,15 +6,15 @@
     visibility: hidden;
 }
 
-.todoapp input[name="totalCount"][value="0"] ~ :is(main, footer) {
+.todoapp input[name="totalCount"][value="0"] ~ * {
 	display: none;
 }
 
-.todoapp input[name="filter"][value="active"] ~ * .task.completed {
+.todoapp input[name="filter"][value="active"] ~ * .task :is(input[name="completed"]:checked, input[name="completed"]:checked ~ *) {
     display: none;
 }
 
-.todoapp input[name="filter"][value="completed"] ~ * .task:not(.completed) {
+.todoapp input[name="filter"][value="completed"] ~ * .task :is(input[name="completed"]:not(:checked), input[name="completed"]:not(:checked) ~ *) {
     display: none;
 }
 
@@ -224,6 +224,6 @@ nav a {
 	border-color: #DB7676;
 }
 
-.task:not(:hover) button[name="destroy"] {
+.task:not(:hover, :focus-within) button[name="destroy"] {
 	opacity: 0;
 }
