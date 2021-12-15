@@ -15,9 +15,9 @@
     display: none;
 }
 
-.todoapp input[name="filter"][value=""] ~ * nav a[href$="#/"],
-.todoapp input[name="filter"][value="active"] ~ * nav a[href$="active"],
-.todoapp input[name="filter"][value="completed"] ~ * nav a[href$="completed"] {
+.todoapp input[name="filter"][value=""] ~ footer a[href$="#/"],
+.todoapp input[name="filter"][value="active"] ~ footer a[href$="active"],
+.todoapp input[name="filter"][value="completed"] ~ footer a[href$="completed"] {
 	border-color: var(--selected);
 }
 
