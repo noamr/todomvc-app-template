@@ -184,14 +184,14 @@ form.task input[name="title"]:not(:read-only) {
 	z-index: 2;
 }
 
-footer {
+.todoapp footer {
 	display: flex;
 	justify-content: stretch;
 	padding: 5px;
 	align-items: center;
 }
 
-footer > * {
+.todoapp footer > * {
 	flex-basis: 100px;
 }
 
