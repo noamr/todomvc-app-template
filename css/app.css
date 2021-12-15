@@ -15,12 +15,9 @@
     display: none;
 }
 
+.todoapp input[name="filter"][value=""] ~ * nav a[href$="#/"],
 .todoapp input[name="filter"][value="active"] ~ * nav a[href$="active"],
 .todoapp input[name="filter"][value="completed"] ~ * nav a[href$="completed"] {
-	border-color: var(--selected);
-}
-
-.todoapp input[name="filter"][value=""] ~ * nav a[href$="#/"] {
 	border-color: var(--selected);
 }
 
