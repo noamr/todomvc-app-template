@@ -1,7 +1,3 @@
-.todoapp {
-    --selected: #CE4646;
-}
-
 .todoapp input[name="completedCount"][value="0"] ~ * input[name="clearCompleted"] {
     visibility: hidden;
 }
@@ -16,9 +12,8 @@
 }
 
 .todoapp input[name="filter"][value=""] ~ footer a[href$="#/"],
-.todoapp input[name="filter"][value="active"] ~ footer a[href$="active"],
-.todoapp input[name="filter"][value="completed"] ~ footer a[href$="completed"] {
-	border-color: var(--selected);
+nav a:target {
+    border-color: #CE4646;
 }
 
 input[type="submit"], input[type="button"] {
