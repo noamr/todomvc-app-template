@@ -11,62 +11,51 @@
 	</head>
 	<body>
 		<section class="todoapp">
+			<header class="header">
+				<h1>todos</h1>
+				<form name="new">
+					<input name="title" type="text" placeholder="What needs to be done?" autofocus>
+				</form>
+			</header>
+
 			<form name="main">
 				<input type="hidden" name="filter" />
 				<input type="hidden" name="completedCount" />
 				<input type="hidden" name="totalCount" />
-				<header class="header">
-					<h1>todos</h1>
-					<input name="title" class="new-todo" placeholder="What needs to be done?" autofocus>
-					<input type="submit" hidden>
-				</header>
-				
-				<!-- This section should be hidden by default and shown when there are todos -->
-				<section class="main">
-					<input id="toggleAll" name="toggleAll" class="toggle-all" type="checkbox">
-					<label for="toggleAll">Mark all as complete</label>
+
+				<main>
+					<input name="toggleAll" type="checkbox">
 					<ul class="todo-list">
 						<template>
 							<form class="task">
 								<li>
-									<div class="view">
-										<input name="completed" class="toggle" type="checkbox" checked>
-										<output name="titleLabel" defaultValue="Taste JavaScript"></output>
-										<button name="destroy" class="destroy" />
-									</div>
-									<input name="title" class="edit" value="Create a TodoMVC template">
+									<input name="completed" type="checkbox" checked>
+									<input name="title" readonly />
+									<input type="submit" hidden name="save" />
+									<button name="destroy">X</button>
 								</li>
 							</form>
 						</template>
 					</ul>
-				</section>
+				</main>
 				<!-- This footer should be hidden by default and shown when there are todos -->
-				<footer class="footer">
-					<span class="todo-count"><output name="activeCount">0</output></span>
-					<ul class="filters">
-						<li>
-							<a href="#/">All</a>
-						</li>
-						<li>
-							<a href="#/active">Active</a>
-						</li>
-						<li>
-							<a href="#/completed">Completed</a>
-						</li>
-					</ul>
-					<input type="button" class="clear-completed" name="clearCompleted" value="Clear completed" />
+				<footer>
+					<output name="activeCount">0</output>
+					<nav>
+						<a href="#/">All</a>
+						<a href="#/active">Active</a>
+						<a href="#/completed">Completed</a>
+					</nav>
+					<input type="button" name="clearCompleted" value="Clear completed" />
 				</footer>
 			</form>
 		</section>
 		<footer class="info">
 			<p>Double-click to edit a todo</p>
-			<!-- Remove the below line ↓ -->
-			<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
-			<!-- Change this out with your name and url ↓ -->
 			<p>Created by <a href="https://twitter.com/nomsternom">Noam Rosenthal</a></p>
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
-		<!-- Scripts here. Don't remove ↓ -->
+
 		<script src="node_modules/todomvc-common/base.js"></script>
 		<script type="module" src="js/app.js"></script>
 	</body>

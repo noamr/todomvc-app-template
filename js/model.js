@@ -27,7 +27,7 @@ export default class TaskListModel {
     }
 
     #validateTask(task) {
-        task = {...task, title: task.title.trim()};
+        task = {completed: !!task.completed, title: task.title.trim()};
         return task.title.length ? task : null;
     }
 
@@ -48,8 +48,10 @@ export default class TaskListModel {
 
     updateTask(key, task) {
         task = this.#validateTask(task);
-        if (!task)
+        if (!task) {
             this.deleteTask(key);
+            return;
+        }
 
         this.#tasks.set(key, task);
         this.#client.onUpdate(key, task);
