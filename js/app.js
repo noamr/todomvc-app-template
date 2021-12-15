@@ -10,17 +10,18 @@ const model = new TaskListModel(new class {
 	onAdd(key, value) {
 		const form = list.querySelector('template').content.cloneNode(true).firstElementChild;
 		form.name = `task-${key}`;
-		const save = () => model.updateTask(key, formData(form));
-		form.elements.completed.addEventListener('change', save);
-		form.elements.titleLabel.addEventListener('dblclick', () => form.elements.title.focus());
-		form.addEventListener('submit', ({submitter}) => submitter.name === 'destroy' ? model.deleteTask(key) : save());
+		form.elements.completed.onchange = form.onsubmit = () => model.updateTask(key, formData(form));
+		form.elements.title.addEventListener('dblclick', ({target}) => target.removeAttribute('readonly'));
+		form.elements.title.addEventListener('blur', ({target}) => target.setAttribute('readonly', ''));
+		form.elements.destroy.addEventListener('click', () => model.deleteTask(key));
 		this.onUpdate(key, value, form);
 		list.appendChild(form);
 	}
 
 	onUpdate(key, {title, completed}, form = document.forms[`task-${key}`]) {
 		form.elements.completed.checked = !!completed;
-		form.elements.titleLabel.value = form.elements.title.value = title;
+		form.elements.title.value = title;
+		form.elements.title.blur();
 	}
 
 	onRemove(key) { document.forms[`task-${key}`].remove(); }
@@ -35,4 +36,4 @@ const model = new TaskListModel(new class {
 
 clearCompleted.addEventListener('click', e => model.clearCompleted());
 toggleAll.addEventListener('change', e => model.markAll(e.target.checked));
-document.forms.main.addEventListener('submit', () => model.createTask(formData(document.forms.main)));
+document.forms.new.addEventListener('submit', ({target}) => model.createTask(formData(target)));
