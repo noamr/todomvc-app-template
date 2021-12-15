@@ -10,18 +10,12 @@
 	display: none;
 }
 
-.todoapp input[name="filter"][value="active"] ~ * .task :is(input[name="completed"]:checked, input[name="completed"]:checked ~ *) {
-    display: none;
-}
-
+.todoapp input[name="filter"][value="active"] ~ * .task :is(input[name="completed"]:checked, input[name="completed"]:checked ~ *),
 .todoapp input[name="filter"][value="completed"] ~ * .task :is(input[name="completed"]:not(:checked), input[name="completed"]:not(:checked) ~ *) {
     display: none;
 }
 
-.todoapp input[name="filter"][value="active"] ~ * nav a[href$="active"] {
-	border-color: var(--selected);
-}
-
+.todoapp input[name="filter"][value="active"] ~ * nav a[href$="active"],
 .todoapp input[name="filter"][value="completed"] ~ * nav a[href$="completed"] {
 	border-color: var(--selected);
 }
