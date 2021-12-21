@@ -31,6 +31,6 @@ const updateFilter = () => document.forms.main.elements.filter.setAttribute('val
 window.addEventListener('hashchange', updateFilter);
 window.addEventListener('load', updateFilter);
 document.querySelector('.todoapp').addEventListener('submit', e => e.preventDefault(), {capture: true});
-document.forms.new.addEventListener('submit', ({target: {elements: {title}}}) => model.createTask({title}));
+document.forms.newTask.addEventListener('submit', ({target: {elements: {title: {value}}}}) => model.createTask({title: value}));
 document.forms.main.elements.toggleAll.addEventListener('change', ({target: {checked}})=> model.markAll(checked));
 document.forms.main.elements.clearCompleted.addEventListener('click', () => model.clearCompleted());
