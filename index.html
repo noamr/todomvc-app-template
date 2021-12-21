@@ -13,42 +13,41 @@
 		<section class="todoapp">
 			<header class="header">
 				<h1>todos</h1>
-				<form name="new">
+				<form name="newTask">
 					<input name="title" type="text" placeholder="What needs to be done?" autofocus>
 				</form>
 			</header>
 
-			<form name="main">
-				<input type="hidden" name="filter" />
-				<input type="hidden" name="completedCount" />
-				<input type="hidden" name="totalCount" />
+			<main>
+				<form id="main"></form>
+				<input type="hidden" name="filter" form="main" />
+				<input type="hidden" name="completedCount" form="main" />
+				<input type="hidden" name="totalCount" form="main" />
+				<input name="toggleAll" type="checkbox" form="main" />
 
-				<main>
-					<input name="toggleAll" type="checkbox">
-					<ul class="todo-list">
-						<template>
-							<form class="task">
-								<li>
-									<input name="completed" type="checkbox" checked>
-									<input name="title" readonly />
-									<input type="submit" hidden name="save" />
-									<button name="destroy">X</button>
-								</li>
-							</form>
-						</template>
-					</ul>
-				</main>
+				<ul class="todo-list">
+					<template>
+						<form class="task">
+							<li>
+								<input name="completed" type="checkbox" checked>
+								<input name="title" readonly />
+								<input type="submit" hidden name="save" />
+								<button name="destroy">X</button>
+							</li>
+						</form>
+					</template>
+				</ul>
+			</main>
 
-				<footer>
-					<output name="activeCount">0</output>
-					<nav>
-						<a name="/" href="#/">All</a>
-						<a name="/active" href="#/active">Active</a>
-						<a name="/completed" href="#/completed">Completed</a>
-					</nav>
-					<input type="button" name="clearCompleted" value="Clear completed" />
-				</footer>
-			</form>
+			<footer>
+				<output form="main" name="activeCount">0</output>
+				<nav>
+					<a name="/" href="#/">All</a>
+					<a name="/active" href="#/active">Active</a>
+					<a name="/completed" href="#/completed">Completed</a>
+				</nav>
+				<input form="main" type="button" name="clearCompleted" value="Clear completed" />
+			</footer>
 		</section>
 		<footer class="info">
 			<p>Double-click to edit a todo</p>
