@@ -1,18 +1,21 @@
-# TodoMVC App Template
+# Vanilla-based TODO-MVC
+
+Using a few concepts to keep code concise without a framework:
+- Reactivity via CSS
+- HTML is mostly forms and form elements
+- Accessing model via a Changes Channel
+
+"View" JS code ends up being less than 40 lines of code: https://github.com/noamr/todomvc-app-template/blob/main/js/app.js
+
+See full article here: https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/
+
+
+
+## TodoMVC App Template
 
 > Template used for creating [TodoMVC](http://todomvc.com) apps
 
 ![](https://github.com/tastejs/todomvc-app-css/raw/master/screenshot.png)
-
-
-## Getting started
-
-- Read the [Application Specification](https://github.com/tastejs/todomvc/blob/master/app-spec.md) before touching the template.
-
-- Delete this file and rename `app-readme.md` to `readme.md` and fill it out.
-
-- Clone this repo and install the dependencies with [npm](https://npmjs.com) by running: `npm install`.
-
 
 ## License
 
